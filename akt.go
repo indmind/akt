@@ -7,30 +7,17 @@ import (
 	"strings"
 )
 
-func unit(u string) string {
-	switch u {
-	case "0":
-		return "nol"
-	case "1":
-		return "satu"
-	case "2":
-		return "dua"
-	case "3":
-		return "tiga"
-	case "4":
-		return "empat"
-	case "5":
-		return "lima"
-	case "6":
-		return "enam"
-	case "7":
-		return "tujuh"
-	case "8":
-		return "delapan"
-	case "9":
-		return "sembilan"
-	}
-	return ""
+var unit = map[string]string{
+	"0": "nol",
+	"1": "satu",
+	"2": "dua",
+	"3": "tiga",
+	"4": "empat",
+	"5": "lima",
+	"6": "enam",
+	"7": "tujuh",
+	"8": "delapan",
+	"9": "sembilan",
 }
 
 func tens(t string) string {
@@ -42,14 +29,14 @@ func tens(t string) string {
 	} else if t == "11" {
 		return "sebelas"
 	} else if head == "1" {
-		return unit(tail) + " belas"
+		return unit[tail] + " belas"
 	} else if head == "0" {
-		return unit(tail)
+		return unit[tail]
 	} else if tail == "0" {
-		return unit(head) + " puluh"
+		return unit[head] + " puluh"
 	}
 
-	return unit(head) + " puluh " + unit(tail)
+	return unit[head] + " puluh " + unit[tail]
 }
 
 func hundreds(h string) string {
@@ -61,12 +48,12 @@ func hundreds(h string) string {
 	if h == "100" {
 		return "seratus"
 	} else if tail == "00" {
-		return unit(head) + " ratus"
+		return unit[head] + " ratus"
 	} else if head == "0" || head == "1" {
 		return "seratus " + tens(tail)
 	}
 
-	return unit(head) + " ratus " + tens(tail)
+	return unit[head] + " ratus " + tens(tail)
 }
 
 func reverse(s string) string {
@@ -135,7 +122,7 @@ func parseNumber(n string) string {
 	if n == "000" {
 		return ""
 	} else if num < 10 {
-		return unit(str)
+		return unit[str]
 	} else if num < 100 {
 		return tens(str)
 	} else if num < 1000 {
@@ -203,8 +190,8 @@ func standardizeSpaces(s string) string {
 
 // Convert string of number to indonesian word (spelled out)
 func Convert(number string) string {
-	filtered := strings.Replace(number, ".", "", -1)
-	splited := splitNumber(filtered)
+	number = strings.Replace(number, ".", "", -1)
+	splited := splitNumber(number)
 
 	for idx, val := range splited {
 		splited[idx] = parseNumber(val)
